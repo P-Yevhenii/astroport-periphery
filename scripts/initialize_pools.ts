@@ -93,10 +93,10 @@ async function add_pool(name:String, symbol:String, amount:number, send_to: Stri
                           )
 
     // Send LP TOkens if needed                                                                                  
-   if (send_to) {
-      await executeContract( terra, wallet, network.terra_pool_info.liquidity_token ,   { "transfer": { "recipient":send_to, "amount":String(network.liquidity_token_balance.balance) } })
-      network.liquidity_token_balance = await queryContract( terra, network.terra_pool_info.liquidity_token , {"balance": { "address":  wallet.key.accAddress } }   )
-    }                                                                            
+  //  if (send_to) {
+  //     await executeContract( terra, wallet, network.terra_pool_info.liquidity_token ,   { "transfer": { "recipient":send_to, "amount":String(network.liquidity_token_balance.balance) } })
+  //     network.liquidity_token_balance = await queryContract( terra, network.terra_pool_info.liquidity_token , {"balance": { "address":  wallet.key.accAddress } }   )
+  //   }                                                                            
 
                   
     console.log(network)

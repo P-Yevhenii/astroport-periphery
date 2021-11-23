@@ -1,0 +1,23 @@
+{
+  "symbol": "MIR",
+  "cw20_token_address": "terra1whyplh3ed5jjrpy7xdyzaxsekafdv5c6fg93x3",
+  "terra_pool_info": {
+    "asset_infos": [
+      {
+        "native_token": {
+          "denom": "uusd"
+        }
+      },
+      {
+        "token": {
+          "contract_addr": "terra1whyplh3ed5jjrpy7xdyzaxsekafdv5c6fg93x3"
+        }
+      }
+    ],
+    "contract_addr": "terra1ahn6mslx0pd4neqf5h3zc0gg7hhm9lgqpzcv5d",
+    "liquidity_token": "terra1j66w3uwcmctk3cm7cz2rvl5rmu0fuh5yh9aanr"
+  },
+  "liquidity_token_balance": {
+    "balance": "54772255750"
+  }
+}

@@ -17,9 +17,9 @@ const ARTIFACTS_PATH = "../artifacts"
 
 const FROM_TIMESTAMP = parseInt((Date.now() / 1000).toFixed(0)) + 150
 
-const AIRDROP_INCENTIVES = 25_000_000_000000
-const LOCKDROP_INCENTIVES = 75_000_000_000000
-const AUCTION_INCENTIVES = 10_000_000_000000
+const AIRDROP_INCENTIVES = 25_00_000_000000
+const LOCKDROP_INCENTIVES = 75_00_000_000000
+const AUCTION_INCENTIVES = 10_00_000_000000
 
 async function main() {
 
@@ -44,17 +44,17 @@ async function main() {
     bombay_testnet.airdrop_InitMsg.config.astro_token_address = network.astrotokenAddress;
     bombay_testnet.airdrop_InitMsg.config.merkle_roots = await getMerkleRoots();
     bombay_testnet.airdrop_InitMsg.config.from_timestamp = FROM_TIMESTAMP;
-    bombay_testnet.airdrop_InitMsg.config.to_timestamp = FROM_TIMESTAMP + 86400 * 90;
+    bombay_testnet.airdrop_InitMsg.config.to_timestamp = FROM_TIMESTAMP + (86400 * 90);
     bombay_testnet.airdrop_InitMsg.config.total_airdrop_size = String(AIRDROP_INCENTIVES);
 
     network.airdropAddress = await deployContract(terra, wallet, join(ARTIFACTS_PATH, 'astroport_airdrop.wasm'), bombay_testnet.airdrop_InitMsg.config)
     console.log(`Airdrop Contract Address : ${network.airdropAddress}`)
 
     //  ************* Transfer tokens to Airdrop Contract *************
-    let msg = { transfer: { recipient: network.airdropAddress, amount: String(AIRDROP_INCENTIVES) } }
-    console.log('execute', network.astrotokenAddress, JSON.stringify(msg))
-    let out = await executeContract(terra, wallet, network.astrotokenAddress, msg)
-    console.log(out.txhash)
+    // let msg = { transfer: { recipient: network.airdropAddress, amount: String(AIRDROP_INCENTIVES) } }
+    // console.log('execute', network.astrotokenAddress, JSON.stringify(msg))
+    // let out = await executeContract(terra, wallet, network.astrotokenAddress, msg)
+    // console.log(out.txhash)
   }
 
   /*************************************** DEPLOYMENT :: LOCKDROP CONTRACT  *****************************************/
@@ -64,8 +64,8 @@ async function main() {
 
     bombay_testnet.lockdrop_InitMsg.config.owner = wallet.key.accAddress;
     bombay_testnet.lockdrop_InitMsg.config.init_timestamp = FROM_TIMESTAMP;
-    bombay_testnet.lockdrop_InitMsg.config.deposit_window = 86400;
-    bombay_testnet.lockdrop_InitMsg.config.withdrawal_window = 86400;
+    bombay_testnet.lockdrop_InitMsg.config.deposit_window = 5*86400;
+    bombay_testnet.lockdrop_InitMsg.config.withdrawal_window = 2*86400;
     console.log(bombay_testnet.lockdrop_InitMsg.config)
 
     network.lockdropAddress = await deployContract(terra, wallet, join(ARTIFACTS_PATH, 'astroport_lockdrop.wasm'), bombay_testnet.lockdrop_InitMsg.config)
@@ -87,10 +87,10 @@ async function main() {
     console.log(`Lockdrop Contract :: astro token successfully set`)
 
     // increase lockdrop incentives
-    let msg = { send: { contract: network.lockdropAddress, amount: String(LOCKDROP_INCENTIVES), msg: Buffer.from(JSON.stringify({ increase_astro_incentives: {} })).toString('base64') } }
-    console.log('execute', network.astrotokenAddress, JSON.stringify(msg))
-    let out = await executeContract(terra, wallet, network.astrotokenAddress, msg)
-    console.log(out.txhash)
+    // let msg = { send: { contract: network.lockdropAddress, amount: String(LOCKDROP_INCENTIVES), msg: Buffer.from(JSON.stringify({ increase_astro_incentives: {} })).toString('base64') } }
+    // console.log('execute', network.astrotokenAddress, JSON.stringify(msg))
+    // let out = await executeContract(terra, wallet, network.astrotokenAddress, msg)
+    // console.log(out.txhash)
   }
 
   /******************************4********* DEPLOYMENT :: AUCTION CONTRACT  *****************************************/
@@ -103,20 +103,20 @@ async function main() {
     bombay_testnet.auction_InitMsg.config.astro_token_address = network.astrotokenAddress;
     bombay_testnet.auction_InitMsg.config.airdrop_contract_address = network.airdropAddress;
     bombay_testnet.auction_InitMsg.config.lockdrop_contract_address = network.lockdropAddress;
-    bombay_testnet.auction_InitMsg.config.lp_tokens_vesting_duration = 86400;
+    bombay_testnet.auction_InitMsg.config.lp_tokens_vesting_duration = 30*86400;
     bombay_testnet.auction_InitMsg.config.init_timestamp = auction_init_timestamp;
-    bombay_testnet.auction_InitMsg.config.deposit_window = 86400;
-    bombay_testnet.auction_InitMsg.config.withdrawal_window = 86400;
+    bombay_testnet.auction_InitMsg.config.deposit_window = 5*86400;
+    bombay_testnet.auction_InitMsg.config.withdrawal_window = 2*86400;
     // console.log(bombay_testnet.auction_InitMsg.config)
 
     network.auctionAddress = await deployContract(terra, wallet, join(ARTIFACTS_PATH, 'astroport_auction.wasm'), bombay_testnet.auction_InitMsg.config)
     console.log(`Auction Contract Address : ${network.auctionAddress}`)
 
     // increase lockdrop incentives
-    let msg = { send: { contract: network.auctionAddress, amount: String(AUCTION_INCENTIVES), msg: Buffer.from(JSON.stringify({ increase_astro_incentives: {} })).toString('base64') } }
-    console.log('execute', network.astrotokenAddress, JSON.stringify(msg))
-    let out = await executeContract(terra, wallet, network.astrotokenAddress, msg)
-    console.log(out.txhash)
+    // let msg = { send: { contract: network.auctionAddress, amount: String(AUCTION_INCENTIVES), msg: Buffer.from(JSON.stringify({ increase_astro_incentives: {} })).toString('base64') } }
+    // console.log('execute', network.astrotokenAddress, JSON.stringify(msg))
+    // let out = await executeContract(terra, wallet, network.astrotokenAddress, msg)
+    // console.log(out.txhash)
   }
 
   /*************************************** UPDATE TRANSACTION :: AIRDROP CONTRACT  *****************************************/
@@ -157,21 +157,21 @@ async function main() {
 
   // Set UST-ASTRO pool address
 
-  if (network.ust_pair_address) {
-    console.log('Set UST-ASTRO pool address in Auction Contract...')
-    await executeContract(terra, wallet, network.auctionAddress, {
-      "update_config": {
-        "new_config": {
-          "owner": undefined,
-          "astro_ust_pair_address": network.ust_pair_address,
-          "generator_address": undefined,
-        }
-      }
-    }
-    )
-    console.log(`Auction Contract :: ust_pair_address successfully set`)
+  // if (network.ust_pair_address) {
+  //   console.log('Set UST-ASTRO pool address in Auction Contract...')
+  //   await executeContract(terra, wallet, network.auctionAddress, {
+  //     "update_config": {
+  //       "new_config": {
+  //         "owner": undefined,
+  //         "astro_ust_pair_address": network.ust_pair_address,
+  //         "generator_address": undefined,
+  //       }
+  //     }
+  //   }
+  //   )
+  //   console.log(`Auction Contract :: ust_pair_address successfully set`)
 
-  }
+  // }
 
   // Set generator
   if (network.generator_contract) {
