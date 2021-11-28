@@ -1370,7 +1370,7 @@ pub fn callback_deposit_liquidity_in_astroport(
         msg: to_binary(&astroport::pair::ExecuteMsg::ProvideLiquidity {
             assets: assets.clone().try_into().unwrap(),
             slippage_tolerance: None,
-            auto_stack: None,
+            auto_stake: None,
         })?,
     }));
 
@@ -1392,20 +1392,7 @@ pub fn callback_deposit_liquidity_in_astroport(
 pub fn query_config(deps: Deps) -> StdResult<ConfigResponse> {
     let config = CONFIG.load(deps.storage)?;
 
-    Ok(ConfigResponse {
-        owner: config.owner,
-        auction_contract: config.auction_contract,
-        generator: config.generator,
-        astro_token: config.astro_token,
-        init_timestamp: config.init_timestamp,
-        deposit_window: config.deposit_window,
-        withdrawal_window: config.withdrawal_window,
-        min_lock_duration: config.min_lock_duration,
-        max_lock_duration: config.max_lock_duration,
-        weekly_multiplier: config.weekly_multiplier,
-        weekly_divider: config.weekly_divider,
-        lockdrop_incentives: config.lockdrop_incentives,
-    })
+    Ok(config)
 }
 
 /// @dev Returns the contract's State

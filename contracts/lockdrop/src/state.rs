@@ -5,6 +5,8 @@ use cw_storage_plus::{Item, Map, U64Key};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
+use astroport_periphery::lockdrop::ConfigResponse;
+
 pub const CONFIG: Item<Config> = Item::new("config");
 pub const STATE: Item<State> = Item::new("state");
 
@@ -15,33 +17,34 @@ pub const USER_INFO: Map<&Addr, UserInfo> = Map::new("users");
 /// Key consists of an Terraswap LP token address, an user address, and a duration
 pub const LOCKUP_INFO: Map<(&Addr, &Addr, U64Key), LockupInfo> = Map::new("lockup_position");
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct Config {
-    /// Account which can update the config
-    pub owner: Addr,
-    /// ASTRO Token address
-    pub astro_token: Option<Addr>,
-    /// Bootstrap Auction contract address
-    pub auction_contract: Option<Addr>,
-    /// Generator (Staking for dual rewards) contract address
-    pub generator: Option<Addr>,
-    /// Timestamp when Contract will start accepting LP Token deposits
-    pub init_timestamp: u64,
-    /// Number of seconds during which lockup deposits will be accepted
-    pub deposit_window: u64,
-    /// Withdrawal Window Length :: Post the deposit window
-    pub withdrawal_window: u64,
-    /// Min. no. of weeks allowed for lockup
-    pub min_lock_duration: u64,
-    /// Max. no. of weeks allowed for lockup
-    pub max_lock_duration: u64,
-    /// Lockdrop Reward multiplier
-    pub weekly_multiplier: u64,
-    /// Lockdrop Reward divider
-    pub weekly_divider: u64,
-    /// Total ASTRO lockdrop incentives to be distributed among the users
-    pub lockdrop_incentives: Option<Uint128>,
-}
+pub type Config = ConfigResponse;
+// #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+// pub struct Config {
+//     /// Account which can update the config
+//     pub owner: Addr,
+//     /// ASTRO Token address
+//     pub astro_token: Option<Addr>,
+//     /// Bootstrap Auction contract address
+//     pub auction_contract: Option<Addr>,
+//     /// Generator (Staking for dual rewards) contract address
+//     pub generator: Option<Addr>,
+//     /// Timestamp when Contract will start accepting LP Token deposits
+//     pub init_timestamp: u64,
+//     /// Number of seconds during which lockup deposits will be accepted
+//     pub deposit_window: u64,
+//     /// Withdrawal Window Length :: Post the deposit window
+//     pub withdrawal_window: u64,
+//     /// Min. no. of weeks allowed for lockup
+//     pub min_lock_duration: u64,
+//     /// Max. no. of weeks allowed for lockup
+//     pub max_lock_duration: u64,
+//     /// Lockdrop Reward multiplier
+//     pub weekly_multiplier: u64,
+//     /// Lockdrop Reward divider
+//     pub weekly_divider: u64,
+//     /// Total ASTRO lockdrop incentives to be distributed among the users
+//     pub lockdrop_incentives: Option<Uint128>,
+// }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct State {

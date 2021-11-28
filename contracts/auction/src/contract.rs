@@ -529,7 +529,7 @@ fn build_provide_liquidity_to_lp_pool_msg(
         msg: to_binary(&astroport::pair::ExecuteMsg::ProvideLiquidity {
             assets: [ust, astro],
             slippage_tolerance,
-            auto_stack: None,
+            auto_stake: None,
         })?,
     }))
 }
